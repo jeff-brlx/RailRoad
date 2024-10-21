@@ -1,6 +1,7 @@
 {
   "name": "node_project",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "projet de node.js (3ème année)",
   "main": "index.js",
   "scripts": {
