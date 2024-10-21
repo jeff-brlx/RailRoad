@@ -1,9 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 
-
-
-
 // Create a new user (Sign-up)
 const registerUser = async (req, res) => {
   try {
@@ -12,7 +9,7 @@ const registerUser = async (req, res) => {
       // Check if the user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-          return res.status(400).json({ error: 'Email is already in use.' });
+          return res.status(400).send('Email is already in use.');
       }
 
       // Create a new user instance
@@ -20,9 +17,9 @@ const registerUser = async (req, res) => {
 
       // Save the new user to the database
       await newUser.save();
-      res.status(201).json({ message: 'User created successfully!' });
+      res.status(201).send('User created successfully!');
   } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).send(error.message);
   }
 };
 
@@ -33,19 +30,19 @@ const loginUser = async (req, res) => {
     // Check if the user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).send('Invalid email or password');
     }
 
     // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).send('Invalid email or password');
     }
 
     // If the credentials are correct, you can create a session, token, etc.
-    res.status(200).json({ message: 'Login successful', user });
+    res.status(200).send({ message: 'Login successful', user });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).send(error.message);
   }
 };
 
@@ -54,11 +51,11 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).send('User not found');
     }
-    res.status(200).json(user);
+    res.status(200).send(user);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).send(error.message);
   }
 };
 
@@ -69,19 +66,19 @@ const updateUser = async (req, res) => {
     const userRole = req.headers['x-user-role'];
 
     if (!userId || !userRole) {
-      return res.status(403).json({ message: 'Authorization headers required' });
+      return res.status(403).send('Authorization headers required');
     }
 
     // Allow only if user is the owner or an admin
     if (userId === req.params.id || userRole === 'admin') {
       const updates = { ...req.body };
       const updatedUser = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
-      res.status(200).json(updatedUser);
+      res.status(200).send(updatedUser);
     } else {
-      return res.status(403).json({ message: 'Unauthorized' });
+      return res.status(403).send('Unauthorized');
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).send(error.message);
   }
 };
 
@@ -92,18 +89,18 @@ const deleteUser = async (req, res) => {
     const userRole = req.headers['x-user-role'];
 
     if (!userId || !userRole) {
-      return res.status(403).json({ message: 'Authorization headers required' });
+      return res.status(403).send('Authorization headers required');
     }
 
     // Allow only if user is the owner or an admin
     if (userId === req.params.id || userRole === 'admin') {
       await User.findByIdAndDelete(req.params.id);
-      res.status(200).json({ message: 'User deleted successfully' });
+      res.status(200).send('User deleted successfully');
     } else {
-      return res.status(403).json({ message: 'Unauthorized' });
+      return res.status(403).send('Unauthorized');
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).send(error.message);
   }
 };
 
