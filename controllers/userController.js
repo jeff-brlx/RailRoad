@@ -40,9 +40,9 @@ const loginUser = async (req, res) => {
     }
 
     // If the credentials are correct, you can create a session, token, etc.
-    res.status(200).send({ message: 'Login successful', user });
+    res.status(200).send('Login successful');
   } catch (error) {
-    console.error('Login Error :', error);
+     res.status(400).send(error.message);
   }
 };
 
