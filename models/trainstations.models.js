@@ -23,7 +23,7 @@ const trainstationSchema = new mongoose.Schema({
             message: props => `${props.value} n'est pas une heure valide!`
         }
     },
-    image: { type: String, required: false },  // Stocke l'URL ou le chemin de l'image redimensionnée
+    image: { type: String, required: true },  // Stocke l'URL ou le chemin de l'image redimensionnée
 });
 
 module.exports = mongoose.model('Trainstation', trainstationSchema);

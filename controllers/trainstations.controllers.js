@@ -47,8 +47,8 @@ const createTrainstation = async(req,res)=>{
                 .toFile(outputPath);
             imagePath = outputPath;
 
-            // Supprimer le fichier original non redimensionné
-            fs.unlinkSync(file.path);
+            // // Supprimer le fichier original non redimensionné
+            // fs.unlinkSync(file.path);
         }
 
         const newTrainStation = new Trainstation({
