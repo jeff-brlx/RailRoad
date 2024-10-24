@@ -19,8 +19,9 @@ app.use(loggerMiddleware);
 require("./config/db");
 
 // Importer et monter les routes de stations de train
-// const trainstationRoutes = require("./routes/trainstations.routes");
-// app.use("/trainstations", trainstationRoutes);  // Correction de la syntaxe du chemin et du middleware
+const trainstationRoutes = require("./routes/trainstations.routes");
+app.use("/trainstations", trainstationRoutes);  // Correction de la syntaxe du chemin et du middleware
+
 
 // Configuration du serveur
 const PORT = process.env.PORT || 3000;  // Utiliser le PORT de l'environnement ou par défaut à 3000
