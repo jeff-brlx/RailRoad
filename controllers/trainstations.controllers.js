@@ -7,9 +7,9 @@ const listTrainstations = async(req,res)=>{
     try{
         const trainList = await Trainstation.find().sort({ name: 1 });
         if(trainList.length >0){
-            return res.status(200).send({message: "Trains founded : ", trainList})
+            return res.status(200).send({message: "Trainstation found : ", trainList})
         }else{
-            return res.status(201).send("No trainStation found")
+            return res.status(201).send("No trainstation found")
         }
     }catch(error){
         return res.status(400).send(error.message)
@@ -17,10 +17,10 @@ const listTrainstations = async(req,res)=>{
 }
 const readTrainstation = async(req,res)=>{
     try{
-        const trainId = req.params.id;
-        const trainStation = await Trainstation.findById(trainId)
+        const trainstationId = req.params.id;
+        const trainStation = await Trainstation.findById(trainstationId)
         if(trainStation){
-            return res.status(200).send(trainStation)
+            return res.status(200).send({message:"Trainstation found :",trainStation})
         }else{
             return res.status(201).send("Error encountered , please verify your request and try again ")
         }
@@ -61,6 +61,11 @@ const createTrainstation = async(req,res)=>{
         await newTrainStation.save();
         res.status(201).send({message :"Trainstation created successfully" , newTrainStation});
     }catch(error){
+        // if (error.code === 'LIMIT_FILE_SIZE') {
+        //     return res.status(400).send({
+        //         message: "File too Large . Please choose a lighter picture"
+        //     })
+        // }
         return res.status(400).send(error.message)
     }
 
@@ -98,7 +103,7 @@ const updateTrainstation = async(req,res)=>{
     }
 }
 const deleteTrainstation = async(req,res)=>{
-    const trainstation = await Trainstation.findByIdAndUpdate(req.params.id, { status: "validate" }, { new: true });
+    const trainstation = await Trainstation.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
     try {
         if (!trainstation) {
             return res.status(404).send("Trainstation not found");

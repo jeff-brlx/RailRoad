@@ -68,12 +68,16 @@ const updateUser = async (req, res) => {
     if (!userId || !userRole) {
       return res.status(403).send('Authorization headers required');
     }
-
     // Allow only if user is the owner or an admin
     if (userId === req.params.id || userRole === 'admin') {
       const updates = { ...req.body };
+
       const updatedUser = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
-      res.status(200).send(updatedUser);
+      if (!updatedUser) {
+        return res.status(400).send("User not found");
+      }else if(updatedUser){
+        res.status(200).send("User updated successfully");
+      }
     } else {
       return res.status(403).send('Unauthorized');
     }

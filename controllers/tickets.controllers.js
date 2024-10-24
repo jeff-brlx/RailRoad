@@ -31,11 +31,11 @@ const bookTicket = async (req, res) => {
 
 const validateTicket = async (req, res) => {
     try {
-        const ticket = await Ticket.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
+        const ticket = await Ticket.findByIdAndUpdate(req.params.id, { status: "validate" }, { new: true });
         if (!ticket) {
             return res.status(404).send("Ticket not found");
         }
-        res.status(200).send("Ticket deleted")
+        res.status(200).send("Ticket validated")
     }catch(error){
         return res.status(400).send(error.message);
     }

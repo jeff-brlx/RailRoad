@@ -25,7 +25,7 @@ app.use("/trainstations", trainstationRoutes);  // Correction de la syntaxe du c
 const ticketRoutes = require("./routes/tickets.routes");  // Import ticket routes
 app.use("/tickets", ticketRoutes);  // Mount ticket routes at the /tickets endpoint
 
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/user.routes');
 app.use("/users" ,userRoutes)
 
 const trainRoutes = require("./routes/trains.routes")

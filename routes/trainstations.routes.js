@@ -9,9 +9,9 @@ router.get('/', TrainstationsController.listTrainstations)
 router.get('/:id', TrainstationsController.readTrainstation)
 
 // Create a trainstation ( reverifier l'exportation de " upload " avec ou sans {}
-router.post('/', AuthMiddleware.verifyUserOrAdmin, ImageMiddleware.upload.single("file"), TrainstationsController.createTrainstation)
+router.post('/', AuthMiddleware.verifyUserOrAdmin, ImageMiddleware.upload.single("file"),ImageMiddleware.handleUploadErrors, TrainstationsController.createTrainstation)
 // Update a trainstation
-router.put('/:id', AuthMiddleware.verifyUserOrAdmin,ImageMiddleware.upload.single("image"), TrainstationsController.updateTrainstation)
+router.put('/:id', AuthMiddleware.verifyUserOrAdmin,ImageMiddleware.upload.single("image"),ImageMiddleware.handleUploadErrors, TrainstationsController.updateTrainstation)
 // Delete a trainstation
 router.delete('/:id', AuthMiddleware.verifyUserOrAdmin, TrainstationsController.deleteTrainstation)
 

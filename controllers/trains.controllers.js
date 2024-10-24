@@ -2,20 +2,20 @@ const Train = require('../models/trains.models');
 
 // List all trains
 const listTrains = async (req, res) => {
-    const { start_station, end_station, date, limit = 10 } = req.query;
+    const { start_station, end_station, time_of_departure, limit = 10 } = req.query;
     try {
         const filters = {};
         if (start_station) {
             filters.start_station = start_station}
         if (end_station) {
             filters.end_station = end_station}
-        if (date) {
-            filters.time_of_departure = { $date: date }
+        if (time_of_departure) {
+            filters.time_of_departure = { $gte:time_of_departure  };
         }
         const trains = await Train.find(filters).limit(limit)
         if(trains.length>0){
 
-            res.status(200).send(trains);
+            res.status(200).send({message:"Trains Founded",trains});
         }else{
             res.status(201).send("No train found");
         }
@@ -48,7 +48,7 @@ const getTrainById = async (req, res) => {
         if (!train) {
             return res.status(404).send("Train not found");
         }
-        res.status(200).send(train);
+        res.status(200).send({message:"Train founded", train});
     } catch (error) {
         return res.status(400).send(error.message)
     }
