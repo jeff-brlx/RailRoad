@@ -5,10 +5,13 @@ const path = require('path');
 
 const listTrainstations = async(req,res)=>{
     try{
-        const trainList = await Trainstation.find();
-        if(trainsList.length >0){
-            return res.status(200).send(trainList)
+        const trainList = await Trainstation.find().sort({ name: 1 });
+        console.log(trainList)
+        if(trainList.length >0){
+            console.log("ouiiiiiii")
+            return res.status(200).send({message: "Trains founded : ", trainList})
         }else{
+            console.log("noooooooooooooooon")
             return res.status(201).send("No trainStation found")
         }
     }catch(error){
