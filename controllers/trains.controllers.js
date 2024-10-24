@@ -20,8 +20,7 @@ const listTrains = async (req, res) => {
             res.status(201).send("No train found");
         }
     } catch (error) {
-        console.error('Error listing trains:', error);
-        // res.status(500).send("Server error: " + (error.message || error));
+        return res.status(400).send(error.message)
     }
 };
 
@@ -38,8 +37,7 @@ const createTrain = async (req, res) => {
         await newTrain.save();
         res.status(200).send("New train created");
     } catch (error) {
-        console.error('Error creating train:', error);
-        // res.status(500).send("Server error: " + (error.message || error));
+        return res.status(400).send(error.message)
     }
 };
 
@@ -52,8 +50,7 @@ const getTrainById = async (req, res) => {
         }
         res.status(200).send(train);
     } catch (error) {
-        console.error('Error fetching train by ID:', error);
-        // res.status(500).send("Server error: " + (error.message || error));
+        return res.status(400).send(error.message)
     }
 };
 
@@ -66,8 +63,7 @@ const updateTrain = async (req, res) => {
         }
         res.status(200).send("Train updated successfully");
     } catch (error) {
-        console.error('Error updating train:', error);
-        // res.status(500).send("Server error: " + (error.message || error));
+        return res.status(400).send(error.message)
     }
 };
 
@@ -80,8 +76,7 @@ const deleteTrain = async (req, res) => {
         }
         res.status(200).send("Train deleted successfully");
     } catch (error) {
-        console.error('Error deleting train:', error);
-        // res.status(500).send("Server error: " + (error.message || error));
+        return res.status(400).send(error.message)
     }
 };
 
