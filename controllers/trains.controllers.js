@@ -29,9 +29,14 @@ const listTrains = async (req, res) => {
 const createTrain = async (req, res) => {
     const { name, start_station, end_station, time_of_departure } = req.body;
     try {
+        const existingTrain = await Train.findOne({name});
+        if (existingTrain) {
+            console.log("ouiii");
+            return res.status(409).send("Train already exist");
+        }
         const newTrain = new Train({ name, start_station, end_station, time_of_departure });
         await newTrain.save();
-        res.status(201).send("New train created");
+        res.status(200).send("New train created");
     } catch (error) {
         console.error('Error creating train:', error);
         // res.status(500).send("Server error: " + (error.message || error));
