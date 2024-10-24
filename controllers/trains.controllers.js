@@ -1,4 +1,5 @@
 const Train = require('../models/trains.models');
+const Trainstation = require('../models/trainstations.models');
 
 // List all trains
 const listTrains = async (req, res) => {
@@ -29,9 +30,17 @@ const createTrain = async (req, res) => {
     const { name, start_station, end_station, time_of_departure } = req.body;
     try {
         const existingTrain = await Train.findOne({name});
+        const existingStartStation = await Trainstation.findOne({name:start_station});
+        const existingEndStation = await Trainstation.findOne({name:end_station});
+
         if (existingTrain) {
-            console.log("ouiii");
-            return res.status(409).send("Train already exist");
+            return res.status(400).send("Train already exist");
+        }
+        else if(!existingStartStation){
+            return res.status(404).send("Start station doesn't exist");
+        }
+        else if(!existingEndStation){
+            return res.status(404).send("End station doesn't exist");
         }
         const newTrain = new Train({ name, start_station, end_station, time_of_departure });
         await newTrain.save();
@@ -57,6 +66,19 @@ const getTrainById = async (req, res) => {
 // Update a train
 const updateTrain = async (req, res) => {
     try {
+        const {  start_station, end_station } = req.body;
+        if(start_station){
+            const existingStartStation = await Trainstation.findOne({name:start_station});
+            if(!existingStartStation){
+                return res.status(404).send("Start station doesn't exist");
+            }
+        }
+        if(end_station ){
+            const existingEndStation = await Trainstation.findOne({name:end_station});
+            if(!existingEndStation){
+                return res.status(404).send("End station doesn't exist");
+            }
+        }
         const train = await Train.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!train) {
             return res.status(404).send("Train not found");
