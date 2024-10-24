@@ -70,7 +70,7 @@ const updateTrain = async (req, res) => {
 // Delete a train
 const deleteTrain = async (req, res) => {
     try {
-        const train = await Train.findByIdAndDelete(req.params.id);
+        const train = await Train.findByIdAndUpdate(req.params.id,{status:'deleted'}, {new:true});
         if (!train) {
             return res.status(404).send("Train not found");
         }
