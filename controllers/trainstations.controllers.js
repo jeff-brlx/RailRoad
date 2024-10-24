@@ -12,7 +12,7 @@ const listTrainstations = async(req,res)=>{
             return res.status(201).send("No trainStation found")
         }
     }catch(error){
-        return res.status(404).send("Error encountered , please verify your request and try again ")
+        return res.status(400).send(error.message)
     }
 }
 const readTrainstation = async(req,res)=>{
@@ -20,12 +20,12 @@ const readTrainstation = async(req,res)=>{
         const trainId = req.params.id;
         const trainStation = await Trainstation.findById(trainId)
         if(trainStation){
-            return res.status(201).send(trainStation)
+            return res.status(200).send(trainStation)
         }else{
-            return res.status(200).send("Error encountered , please verify your request and try again ")
+            return res.status(201).send("Error encountered , please verify your request and try again ")
         }
     }catch(error){
-        return res.status(404).send("Error encountered , please verify your request and try again ")
+        return res.status(400).send(error.message)
     }
 
 }
@@ -61,7 +61,7 @@ const createTrainstation = async(req,res)=>{
         await newTrainStation.save();
         res.status(201).send({message :"Trainstation created successfully" , newTrainStation});
     }catch(error){
-        return res.status(404).send("Error encountered , please verify your request and try again")
+        return res.status(400).send(error.message)
     }
 
 
@@ -72,7 +72,7 @@ const updateTrainstation = async(req,res)=>{
     try{
         const trainstation = await Trainstation.findByIdAndUpdate(req.params.id ,req.body, { new: true });
         if (!trainstation) {
-            return res.status(404).send("Trainstation not found");
+            return res.status(400).send("Trainstation not found");
         }
         // Mise à jour des données
         trainstation.name = name || trainstation.name;
@@ -94,7 +94,7 @@ const updateTrainstation = async(req,res)=>{
         await trainstation.save();
         res.status(200).send("Trainstation updated")
     }catch(error){
-        return res.status(404).send("Error encountered , please verify your request and try again")
+        return res.status(400).send(error.message)
     }
 }
 const deleteTrainstation = async(req,res)=>{
@@ -105,7 +105,7 @@ const deleteTrainstation = async(req,res)=>{
         }
         res.status(200).send("Trainstation deleted")
     }catch(error){
-        return res.status(404).send("Error encountered , please verify your request and try again");
+        return res.status(400).send(error.message);
     }
 }
 
