@@ -15,4 +15,4 @@ router.put('/:id', AuthMiddleware.verifyUserOrAdmin,ImageMiddleware.upload.singl
 // Delete a trainstation
 router.delete('/:id', AuthMiddleware.verifyUserOrAdmin, TrainstationsController.deleteTrainstation)
 
-
+module.exports= router;
