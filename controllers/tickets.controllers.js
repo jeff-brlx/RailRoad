@@ -30,19 +30,14 @@ const bookTicket = async (req, res) => {
 };
 
 const validateTicket = async (req, res) => {
-    const { ticketId } = req.params;
-
     try {
-        const ticket = await Ticket.findById(ticketId);
+        const ticket = await Ticket.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
         if (!ticket) {
             return res.status(404).send("Ticket not found");
         }
-
-        // Additional validation logic can be added here
-        res.status(200).send({ message: "Ticket validated", ticket });
-    } catch (error) {
-        // Vous pouvez choisir de ne rien faire ou de renvoyer un message personnalisé ici.
-        return res.status(400).send("Failed to validate ticket. Please try again.");
+        res.status(200).send("Ticket deleted")
+    }catch(error){
+        return res.status(400).send(error.message);
     }
 };
 

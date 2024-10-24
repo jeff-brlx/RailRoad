@@ -22,6 +22,12 @@ require("./config/db");
 const trainstationRoutes = require("./routes/trainstations.routes");
 app.use("/trainstations", trainstationRoutes);  // Correction de la syntaxe du chemin et du middleware
 
+const ticketRoutes = require("./routes/tickets.routes");  // Import ticket routes
+app.use("/tickets", ticketRoutes);  // Mount ticket routes at the /tickets endpoint
+
+
+
+
 
 // Configuration du serveur
 const PORT = process.env.PORT || 3000;  // Utiliser le PORT de l'environnement ou par défaut à 3000

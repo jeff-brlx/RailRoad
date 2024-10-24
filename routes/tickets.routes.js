@@ -7,6 +7,6 @@ const AuthMiddleware = require('../middlewares/auth.middleware');
 router.post('/book', TicketsController.bookTicket);
 
 // Validate a ticket
-router.get('/validate/:ticketId', AuthMiddleware.verifyUserOrEmployee, TicketsController.validateTicket);
+router.put('/validate/:id', AuthMiddleware.verifyUserOrEmployee, TicketsController.validateTicket);
 
 module.exports = router;

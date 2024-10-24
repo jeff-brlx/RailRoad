@@ -98,7 +98,7 @@ const updateTrainstation = async(req,res)=>{
     }
 }
 const deleteTrainstation = async(req,res)=>{
-    const trainstation = await Trainstation.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
+    const trainstation = await Trainstation.findByIdAndUpdate(req.params.id, { status: "validate" }, { new: true });
     try {
         if (!trainstation) {
             return res.status(404).send("Trainstation not found");
