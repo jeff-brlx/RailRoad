@@ -94,7 +94,7 @@ const deleteUser = async (req, res) => {
 
     // Allow only if user is the owner or an admin
     if (userId === req.params.id || userRole === 'admin') {
-      await User.findByIdAndDelete(req.params.id);
+      await User.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
       res.status(200).send('User deleted successfully');
     } else {
       return res.status(403).send('Unauthorized');
