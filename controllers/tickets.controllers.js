@@ -25,7 +25,7 @@ const bookTicket = async (req, res) => {
         await newTicket.save();
         res.status(201).send({ message: "Ticket booked successfully", ticket: newTicket });
     } catch (error) {
-        return res.status(400).send("Failed to book ticket. Please try again.");
+        return res.status(404).send(error.message);
     }
 };
 
@@ -37,7 +37,7 @@ const validateTicket = async (req, res) => {
         }
         res.status(200).send("Ticket validated")
     }catch(error){
-        return res.status(400).send(error.message);
+        return res.status(404).send(error.message);
     }
 };
 
