@@ -1,5 +1,6 @@
 const Train = require('../models/trains.models');
 const Trainstation = require('../models/trainstations.models');
+const Ticket = require("../models/tickets.models");
 
 // List all trains
 const listTrains = async (req, res) => {
@@ -21,7 +22,7 @@ const listTrains = async (req, res) => {
             res.status(201).send("No train found");
         }
     } catch (error) {
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 };
 
@@ -46,7 +47,7 @@ const createTrain = async (req, res) => {
         await newTrain.save();
         res.status(200).send("New train created");
     } catch (error) {
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 };
 
@@ -59,7 +60,7 @@ const getTrainById = async (req, res) => {
         }
         res.status(200).send({message:"Train founded", train});
     } catch (error) {
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 };
 
@@ -85,7 +86,7 @@ const updateTrain = async (req, res) => {
         }
         res.status(200).send("Train updated successfully");
     } catch (error) {
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 };
 
@@ -97,8 +98,9 @@ const deleteTrain = async (req, res) => {
             return res.status(404).send("Train not found");
         }
         res.status(200).send("Train deleted successfully");
+
     } catch (error) {
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 };
 

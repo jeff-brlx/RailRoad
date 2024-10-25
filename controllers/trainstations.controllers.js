@@ -1,4 +1,7 @@
 const Trainstation = require('../models/trainstations.models');
+const Train = require('../models/trains.models');
+const Ticket = require('../models/tickets.models');
+
 const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +15,7 @@ const listTrainstations = async(req,res)=>{
             return res.status(201).send("No trainstation found")
         }
     }catch(error){
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 }
 const readTrainstation = async(req,res)=>{
@@ -25,7 +28,7 @@ const readTrainstation = async(req,res)=>{
             return res.status(201).send("Error encountered , please verify your request and try again ")
         }
     }catch(error){
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 
 }
@@ -66,7 +69,7 @@ const createTrainstation = async(req,res)=>{
         //         message: "File too Large . Please choose a lighter picture"
         //     })
         // }
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 
 
@@ -99,7 +102,7 @@ const updateTrainstation = async(req,res)=>{
         await trainstation.save();
         res.status(200).send("Trainstation updated")
     }catch(error){
-        return res.status(400).send(error.message)
+        return res.status(404).send(error.message)
     }
 }
 const deleteTrainstation = async(req,res)=>{
@@ -109,8 +112,12 @@ const deleteTrainstation = async(req,res)=>{
             return res.status(404).send("Trainstation not found");
         }
         res.status(200).send("Trainstation deleted")
+        await Train.updateMany({ start_station: trainstation.name }, { status: "Canceled" });
+        await Train.updateMany({ end_station: trainstation.name }, { status: "Canceled" });
+        await Ticket.updateMany({ trainstationId: trainstation.id }, { status: "Canceled" });
+
     }catch(error){
-        return res.status(400).send(error.message);
+        return res.status(404).send(error.message);
     }
 }
 

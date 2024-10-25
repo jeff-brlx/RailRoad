@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
+const Ticket = require("../models/tickets.models");
 
 // Create a new user (Sign-up)
 const registerUser = async (req, res) => {
@@ -19,7 +20,7 @@ const registerUser = async (req, res) => {
       await newUser.save();
       res.status(201).send('User created successfully!');
   } catch (error) {
-      res.status(400).send(error.message);
+      res.status(404).send(error.message);
   }
 };
 
@@ -42,7 +43,7 @@ const loginUser = async (req, res) => {
     // If the credentials are correct, you can create a session, token, etc.
     res.status(200).send('Login successful');
   } catch (error) {
-     res.status(400).send(error.message);
+     res.status(404).send(error.message);
   }
 };
 
@@ -55,7 +56,7 @@ const getUser = async (req, res) => {
     }
     res.status(200).send(user);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(404).send(error.message);
   }
 };
 
@@ -82,7 +83,7 @@ const updateUser = async (req, res) => {
       return res.status(403).send('Unauthorized');
     }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(404).send(error.message);
   }
 };
 
@@ -99,12 +100,13 @@ const deleteUser = async (req, res) => {
     // Allow only if user is the owner or an admin
     if (userId === req.params.id || userRole === 'admin') {
       await User.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
-      res.status(200).send('User deleted successfully');
+      await Ticket.updateMany({ userId: req.params.id }, { status: "Canceled" });
+      return res.status(200).send('User deleted successfully');
     } else {
       return res.status(403).send('Unauthorized');
     }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(404).send(error.message);
   }
 };
 

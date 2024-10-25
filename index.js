@@ -33,9 +33,8 @@ app.use("/trains", trainRoutes)
 
 
 
-
-
-
+const { notFoundHandler }= require("./middlewares/notFoundHandler.middleware")
+app.use(notFoundHandler)
 
 // Configuration du serveur
 const PORT = process.env.PORT || 3000;  // Utiliser le PORT de l'environnement ou par défaut à 3000
