@@ -7,25 +7,25 @@ const bookTicket = async (req, res) => {
     const { userId, trainstationId } = req.body;
 
     try {
-        // Vérifier si l'utilisateur existe
+        // verify if the user exist
         const user = await User.findById(userId);
         if (!user || user.status === 'deleted') {
             return res.status(404).send("User not found");
         }
 
-        // Vérifier si la station de train existe et est active
+        // Verify if the train station exist and is active
         const trainstation = await Trainstation.findById(trainstationId);
         if (!trainstation || trainstation.status === 'deleted') {
             return res.status(404).send("Trainstation not found or has been deleted");
         }
 
-        // Vérifier si la station est ouverte pour les réservations
+        // Verify if the train station is open
         const currentHour = new Date().toISOString().slice(11, 16); // Format HH:mm
         if (currentHour < trainstation.open_hour || currentHour > trainstation.close_hour) {
             return res.status(400).send("Trainstation is currently closed for bookings");
         }
 
-        // Créer et enregistrer un nouveau ticket
+        // Create and book a new ticket
         const newTicket = new Ticket({
             userId,
             trainstationId

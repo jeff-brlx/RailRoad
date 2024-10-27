@@ -1,23 +1,23 @@
-// Charger les variables d'environnement
+// import environment variables
 require("dotenv").config();
 
-// Importer les modules nécessaires
+// Import necessaries dependencies
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
-// Créer une application Express
+// Create an Express app
 const app = express();
 
-// Middlewares pour analyser les données JSON et les données encodées en URL
+// Middlewares to analyse json metadatas
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Importer et utiliser un middleware de journalisation pour améliorer le suivi des requêtes
+// Import middleware To show request tested
 const { loggerMiddleware } = require("./middlewares/logger.middleware");
 app.use(loggerMiddleware);
 
-// Configuration de la documentation Swagger
+// Swagger configuration
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -33,10 +33,10 @@ const options = {
 const swaggerSpec = swaggerJsdoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Configuration de la base de données
+// BDD configuration
 require("./config/db");
 
-// Importer et monter les routes de stations de train
+// Import all the routes
 const trainstationRoutes = require("./routes/trainstations.routes");
 app.use("/trainstations", trainstationRoutes);
 
@@ -49,12 +49,12 @@ app.use("/users", userRoutes);
 const trainRoutes = require("./routes/trains.routes");
 app.use("/trains", trainRoutes);
 
-// Gestion des erreurs de route non trouvée
+// Handle paths not found
 const { notFoundHandler } = require("./middlewares/notFoundHandler.middleware");
 const mongoose = require("mongoose");
 app.use(notFoundHandler);
 
-// Configuration du serveur
+// Sever configuration
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server up and running on http://localhost:${PORT}`);

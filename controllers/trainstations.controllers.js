@@ -6,6 +6,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
+// List all train stations and filter by tag
 const listTrainstations = async(req,res)=>{
     try{
         const trainList = await Trainstation.find().sort({ name: 1 });
@@ -18,6 +19,7 @@ const listTrainstations = async(req,res)=>{
         return res.status(404).send(error.message)
     }
 }
+// Get a trainstation detail
 const readTrainstation = async(req,res)=>{
     try{
         const trainstationId = req.params.id;
@@ -32,6 +34,8 @@ const readTrainstation = async(req,res)=>{
     }
 
 }
+
+// Create a new train station
 const createTrainstation = async(req,res)=>{
     const { name , open_hour , close_hour } = req.body
     const file = req.file
@@ -74,6 +78,8 @@ const createTrainstation = async(req,res)=>{
 
 
 }
+
+// Update a train station
 const updateTrainstation = async(req,res)=>{
     const { name , open_hour , close_hour, status } = req.body
 
@@ -83,13 +89,13 @@ const updateTrainstation = async(req,res)=>{
         if (!trainstation) {
             return res.status(400).send("Trainstation not found");
         }
-        // Mise à jour des données
+        // Update data
         trainstation.name = name || trainstation.name;
         trainstation.open_hour = open_hour || trainstation.open_hour;
         trainstation.close_hour = close_hour || trainstation.close_hour;
         trainstation.status = status || trainstation.status;
 
-        // Mise à jour de l'image si un nouveau fichier est fourni
+        // Update the image if a new one is put
         if (file) {
             const outputPath = path.join('uploads', `resized-${Date.now()}-${file.originalname}`);
             await sharp(file.path)
@@ -97,7 +103,7 @@ const updateTrainstation = async(req,res)=>{
                 .toFile(outputPath);
             trainstation.image = outputPath;
 
-            // Supprimer l'ancienne image et le fichier temporaire
+            // Suppress the old one
             fs.unlinkSync(file.path);
         }
 
@@ -107,6 +113,8 @@ const updateTrainstation = async(req,res)=>{
         return res.status(404).send(error.message)
     }
 }
+
+// Delete a train station
 const deleteTrainstation = async(req,res)=>{
     const trainstation = await Trainstation.findByIdAndUpdate(req.params.id, { status: "deleted" }, { new: true });
     try {
