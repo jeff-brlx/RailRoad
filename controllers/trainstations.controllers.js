@@ -75,7 +75,8 @@ const createTrainstation = async(req,res)=>{
 
 }
 const updateTrainstation = async(req,res)=>{
-    const { name , open_hour , close_hour } = req.body
+    const { name , open_hour , close_hour, status } = req.body
+
     const file = req.file
     try{
         const trainstation = await Trainstation.findByIdAndUpdate(req.params.id ,req.body, { new: true });
@@ -86,6 +87,7 @@ const updateTrainstation = async(req,res)=>{
         trainstation.name = name || trainstation.name;
         trainstation.open_hour = open_hour || trainstation.open_hour;
         trainstation.close_hour = close_hour || trainstation.close_hour;
+        trainstation.status = status || trainstation.status;
 
         // Mise à jour de l'image si un nouveau fichier est fourni
         if (file) {

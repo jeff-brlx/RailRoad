@@ -1,0 +1,547 @@
+openapi: "3.0.0"
+info:
+  title: "Train Ticket System API"
+  version: "1.0.0"
+  description: "API documentation for managing train stations, tickets, users, and trains."
+
+paths:
+  # Tickets
+  /tickets/book:
+    post:
+      summary: "Book a ticket"
+      tags:
+        - Tickets
+      requestBody:
+        description: "Ticket booking data"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                trainstationId:
+                  type: string
+      responses:
+        '200':
+          description: "Ticket booked successfully"
+        '400':
+          description: "Invalid request"
+
+  /tickets/validate/{id}:
+    put:
+      summary: "Validate a ticket"
+      tags:
+        - Tickets
+      parameters:
+        - in: path
+          name: id # à tester
+          required: true
+          schema:
+            type: string
+          description: "ID of the ticket to validate"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      responses:
+        '200':
+          description: "Ticket validated successfully"
+        '403':
+          description: "Forbidden"
+        '404':
+          description: "Ticket not found"
+
+  # Trainstations
+  /trainstations:
+    get:
+      summary: "List all train stations"
+      tags:
+        - Trainstations
+      responses:
+        '200':
+          description: "A list of train stations"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+    post:
+      summary: "Create a new train station"
+      tags:
+        - Trainstations
+      parameters:
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [ admin, employee ]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      requestBody:
+        description: "Train station data"
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                open_hour:
+                  type: string
+                close_hour:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: "Train station created successfully"
+        '403':
+          description: "Unauthorized"
+
+  /trainstations/{id}:
+    get:
+      summary: "Get train station details"
+      tags:
+        - Trainstations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the train"
+      responses:
+        '200':
+          description: "Train station details"
+        '404':
+          description: "Train station not found"
+    put:
+      summary: "Update train station details"
+      tags:
+        - Trainstations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the train station to update"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  nullable: true
+                open_hour:
+                  type: string
+                  nullable: true
+                close_hour:
+                  type: string
+                  nullable: true
+                image:
+                  type: string
+                  format: binary
+                  nullable: true
+                status:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: "Train station updated successfully"
+        '404':
+          description: "Train station not found"
+    delete:
+      summary: "Delete a train station"
+      tags:
+        - Trainstations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the train station to delete"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      responses:
+        '204':
+          description: "Train station deleted successfully"
+        '403':
+          description: "Unauthorized"
+
+  # Trains
+  /trains:
+    get:
+      summary: "List all trains"
+      tags:
+        - Trains
+      parameters:
+        - in: query
+          name: time_of_departure
+          schema:
+            type: string
+            format: date-time
+          description: "Filter trains by departure time (HH:mm format)"
+        - in: query
+          name: start_station
+          schema:
+            type: string
+          description: "Filter trains by starting station"
+        - in: query
+          name: end_station
+          schema:
+            type: string
+          description: "Filter trains by ending station"
+      responses:
+        '200':
+          description: "A list of trains"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+    post:
+      summary: "Create a new train"
+      tags:
+        - Trains
+      parameters:
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [ admin, employee ]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      requestBody:
+        description: "Train data"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start_station:
+                  type: string
+                end_station:
+                  type: string
+                time_of_departure:
+                  type: string  # à tester
+                  format: date-time
+
+      responses:
+        '201':
+          description: "Train created successfully"
+        '403':
+          description: "Unauthorized"
+
+  /trains/{id}:
+    get:
+      summary: "Get train details by ID"
+      tags:
+        - Trains
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the train"
+      responses:
+        '200':
+          description: "Train details"
+        '404':
+          description: "Train not found"
+    put:
+      summary: "Update a train"
+      tags:
+        - Trains
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the train to update"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start_station:
+                  type: string
+                end_station:
+                  type: string
+                time_of_departure:
+                  type: string
+                  format: date-time
+                status:
+                  type: string
+      responses:
+        '200':
+          description: "Train updated successfully"
+        '403':
+          description: "Unauthorized"
+        '404':
+          description: "Train not found"
+    delete:
+      summary: "Delete a train"
+      tags:
+        - Trains
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the train to delete"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      responses:
+        '204':
+          description: "Train deleted successfully"
+        '403':
+          description: "Unauthorized"
+
+  # Users
+  /users/register:
+    post:
+      summary: "Register a new user"
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                pseudo:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: "User registered successfully"
+
+  /users/login:
+    post:
+      summary: "Login user"
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: "User logged in successfully"
+        '401':
+          description: "Invalid credentials"
+
+  /users/{id}:
+    get:
+      summary: "Get user details"
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the user"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      responses:
+        '200':
+          description: "User details"
+        '403':
+          description: "Unauthorized"
+
+    put:
+      summary: "Update user details"
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the user to update"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                pseudo:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: "User updated successfully"
+        '403':
+          description: "Unauthorized"
+
+    delete:
+      summary: "Delete a user"
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: "ID of the user to delete"
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+            enum: [admin, employee]
+          description: "Role of the user making the request (admin or employee)"
+        - in: header
+          name: X-User-ID
+          required: true
+          schema:
+            type: string
+          description: "ID of the user making the request"
+      responses:
+        '204':
+          description: "User deleted successfully"
+        '403':
+          description: "Unauthorized"

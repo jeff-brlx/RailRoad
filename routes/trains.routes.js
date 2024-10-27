@@ -3,8 +3,8 @@ const TrainsController = require('../controllers/trains.controllers');
 const AuthMiddleware = require('../middlewares/auth.Middleware');
 
 // List  trains
-router.get('/tag', TrainsController.listTrains);
-router.get('/Id/:id', TrainsController.getTrainById);
+router.get('/', TrainsController.listTrains);
+router.get('/:id', TrainsController.getTrainById);
 
 // Admin only routes for train management
 router.post('/', AuthMiddleware.verifyUserOrAdmin, TrainsController.createTrain);//authMiddleware,
