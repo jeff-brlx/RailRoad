@@ -233,7 +233,6 @@ paths:
           name: time_of_departure
           schema:
             type: string
-            format: date-time
           description: "Filter trains by departure time (HH:mm format)"
         - in: query
           name: start_station
@@ -259,6 +258,14 @@ paths:
                       type: string
                     name:
                       type: string
+                    time_of_departure:
+                      type: string
+                    start_station:
+                      type: string
+                    end_station:
+                      type: string
+        '400':
+          description: "Invalid query parameters"
     post:
       summary: "Create a new train"
       tags:
@@ -489,8 +496,8 @@ paths:
           required: true
           schema:
             type: string
-            enum: [admin, employee]
-          description: "Role of the user making the request (admin or employee)"
+            enum: [admin, employee, user]
+          description: "Role of the user making the request (admin, employee, or user)"
         - in: header
           name: X-User-ID
           required: true
@@ -532,8 +539,8 @@ paths:
           required: true
           schema:
             type: string
-            enum: [admin, employee]
-          description: "Role of the user making the request (admin or employee)"
+            enum: [admin, employee, user]
+          description: "Role of the user making the request (admin, employee, or user)"
         - in: header
           name: X-User-ID
           required: true
