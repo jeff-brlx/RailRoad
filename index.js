@@ -51,6 +51,7 @@ app.use("/trains", trainRoutes);
 
 // Gestion des erreurs de route non trouvée
 const { notFoundHandler } = require("./middlewares/notFoundHandler.middleware");
+const mongoose = require("mongoose");
 app.use(notFoundHandler);
 
 // Configuration du serveur
@@ -59,3 +60,5 @@ app.listen(PORT, () => {
   console.log(`Server up and running on http://localhost:${PORT}`);
   console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
 });
+
+module.exports = app
